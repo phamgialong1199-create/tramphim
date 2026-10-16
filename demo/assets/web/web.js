@@ -1,0 +1,23 @@
+const auth=document.getElementById('auth-dialog'),panel=document.getElementById('auth-panel'),message=document.getElementById('message-dialog');
+const fields={register:[...document.querySelectorAll('#register-fields input')],login:[...document.querySelectorAll('#login-fields input')]};
+const values={register:['demo_visitor','Demo_12345','Demo_12345','Khách trải nghiệm'],login:['demo_visitor','Demo_12345']};
+let mode='register',sampleReady=false,activeSession=false,focusBeforeAuth,focusBeforeMessage;
+function setStatus(text){document.getElementById('auth-status').textContent=text}
+function clearSamples(){Object.values(fields).flat().forEach(e=>{e.value='';e.classList.remove('filled')});sampleReady=false}
+function openAuth(next){mode=next;focusBeforeAuth=document.activeElement;clearSamples();panel.dataset.mode=next;auth.classList.toggle('login',next==='login');document.getElementById('register-fields').hidden=next!=='register';document.getElementById('login-fields').hidden=next!=='login';document.getElementById('auth-heading').textContent=(next==='register'?'Đăng ký':'Đăng nhập')+' mô phỏng';setStatus('Chọn dữ liệu mẫu, sau đó bấm nút trong biểu mẫu. Không nhập thông tin thật.');auth.showModal();document.getElementById('fill-sample').focus()}
+function closeAuth(){auth.close()}
+auth.addEventListener('close',()=>{clearSamples();focusBeforeAuth?.focus()});
+document.getElementById('auth-close').addEventListener('click',closeAuth);
+document.getElementById('fill-sample').addEventListener('click',()=>{fields[mode].forEach((e,i)=>{e.value=values[mode][i];e.classList.add('filled')});sampleReady=true;setStatus('Đã điền dữ liệu mẫu. Bấm '+(mode==='register'?'ĐĂNG KÝ':'ĐĂNG NHẬP')+' trong biểu mẫu để tiếp tục.');document.getElementById(mode+'-submit').focus()});
+function notify(title,body,success=false){focusBeforeMessage=document.activeElement;document.getElementById('message-title').textContent=title;document.getElementById('message-body').textContent=body;document.getElementById('continue-lobby').hidden=!success;document.getElementById('message-close').hidden=success;message.showModal()}
+function finishAuth(){if(!sampleReady){setStatus('Chưa có dữ liệu mẫu. Bấm “1. Điền dữ liệu mẫu” trước khi tiếp tục.');document.getElementById('fill-sample').focus();return}const wasRegistration=mode==='register';activeSession=true;closeAuth();updateSession();notify(wasRegistration?'Đã tạo tài khoản mẫu':'Đã đăng nhập mẫu','Tên hiển thị: Khách trải nghiệm · Tài khoản: demo_visitor. Đây là phiên mô phỏng trong bộ nhớ của trang; tải lại trang sẽ xóa phiên. Không có tài khoản được tạo trên hệ thống thật.',true)}
+document.getElementById('register-submit').addEventListener('click',finishAuth);document.getElementById('login-submit').addEventListener('click',finishAuth);
+document.getElementById('login-forgot').addEventListener('click',()=>{setStatus('Khôi phục tài khoản chỉ mô phỏng. Không yêu cầu số điện thoại, email hoặc OTP.');document.getElementById('fill-sample').focus()});
+document.querySelectorAll('[data-auth]').forEach(e=>e.addEventListener('click',()=>openAuth(e.dataset.auth)));
+document.querySelectorAll('[data-info]').forEach(e=>e.addEventListener('click',()=>notify('Thông tin demo',e.dataset.info)));
+document.querySelectorAll('[data-game]').forEach(e=>e.addEventListener('click',()=>notify(e.dataset.game,'Mục này chỉ dùng để trưng bày giao diện. Không có vòng chơi, đặt cược, số dư hoặc trả thưởng.')));
+document.getElementById('message-close').addEventListener('click',()=>message.close());document.getElementById('continue-lobby').addEventListener('click',()=>{message.close();document.querySelector('.top-register').focus()});message.addEventListener('close',()=>focusBeforeMessage?.focus());
+function updateSession(){document.getElementById('session-label').textContent=activeSession?'Phiên trải nghiệm: demo_visitor · Tài khoản mẫu':'Phiên trải nghiệm: Khách';document.getElementById('reset-session').hidden=!activeSession}
+document.getElementById('reset-session').addEventListener('click',()=>{activeSession=false;clearSamples();updateSession();notify('Đã kết thúc phiên mẫu','Phiên mô phỏng đã được xóa khỏi bộ nhớ của trang.')});
+for(const d of [auth,message])d.addEventListener('click',e=>{if(e.target!==d)return;const r=d.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)d.close()});
+const initialView=new URLSearchParams(location.search).get('view');if(initialView==='register'||initialView==='login')openAuth(initialView);

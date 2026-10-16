@@ -8,6 +8,8 @@ dialog.addEventListener('click',e=>{if(e.target!==dialog)return;const r=dialog.g
 document.addEventListener('click',e=>{
   const target=e.target.closest('a,button,.install-1111,.openModalAccess,.phishing-sp-content');
   if(!target||target.closest('.demo-dialog')||target.closest('.slick-dots')||target.classList.contains('ambassador-dot'))return;
+  if(target.id==='btnWeb'||target.classList.contains('btn-web')){e.preventDefault();window.location.assign(new URL('web/?view=lobby',window.location.href));return}
+  if(target.closest('.btn-signup,.register-btn')){e.preventDefault();window.location.assign(new URL('web/?view=register',window.location.href));return}
   if(target.id==='scrollToTopBtn'){window.scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'instant':'smooth'});return}
   e.preventDefault();showDemo();
 });
