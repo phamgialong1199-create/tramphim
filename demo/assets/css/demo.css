@@ -1,0 +1,15 @@
+
+.main-inner{min-height:100dvh!important}
+.demo-indicator{position:fixed;left:8px;top:4px;z-index:10001;font:10px Arial,sans-serif;color:#c7ab77;pointer-events:none;text-shadow:0 1px 3px #000}
+.static-carousel .slick-track{display:grid!important;width:100%!important;transform:none!important;opacity:1!important;position:relative}
+.static-carousel .slick-slide{grid-area:1/1;width:100%!important;float:none!important;position:relative!important;left:0!important;top:0!important;opacity:0!important;visibility:hidden;z-index:0!important;transition:opacity .5s linear}
+.static-carousel .slick-slide.slick-active{opacity:1!important;visibility:visible;z-index:1!important}
+.static-carousel .slick-list{height:100%}
+.phishing-sp-slide .slick-track{height:100%}
+.demo-dialog{width:min(400px,calc(100% - 32px));padding:28px;border:1px solid #967134;border-radius:20px;background:#1b0d05;color:#ffe5b7;box-shadow:0 20px 90px #000;font-family:'SF Pro Display',sans-serif}
+.demo-dialog::backdrop{background:#000b}
+.demo-dialog h2{font-size:23px;margin:0 0 15px;color:#eac26e}.demo-dialog p{line-height:1.6;margin-bottom:20px}
+.demo-dialog button{padding:9px 25px;border:1px solid #c89942;border-radius:20px;background:#59340e;color:#ffe5b7}
+.demo-disclaimer{max-width:650px;margin:22px auto 0;color:#bba27b;font-size:12px;text-align:center;line-height:1.6}
+button:focus-visible,a:focus-visible{outline:2px solid #efcb70;outline-offset:4px}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
